@@ -1,0 +1,2 @@
+#.gitattributes file
+**/private/** filter=git-crypt diff=git-crypt
