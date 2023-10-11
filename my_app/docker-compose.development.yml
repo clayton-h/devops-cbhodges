@@ -1,40 +1,40 @@
 version: '3'
 services:
   # Node.js Server
-  notes--api:
+  notes-development-api:
     build:
       context: .
-      dockerfile: Dockerfile.
-    container_name: --api
+      dockerfile: Dockerfile.development
+    container_name: my_notes_app-development-api
     env_file:
-      - ./src/private/.env
+      - ./src/private/development.env
     volumes:
       - .:/app
     working_dir: /app
     ports:
-      - ":"
+      - "3000:3000"
     networks:
-      - __network
+      - my_notes_app_development_network
 
     depends_on:
-      - --db
-    command: npm run 
+      - my_notes_app-development-db
+    command: npm run development
 
 # PostgreSQL Database
-  --db:
+  my_notes_app-development-db:
     image: postgres:15
-    container_name: --db
+    container_name: my_notes_app-development-db
     env_file:
-      - ./src/private/.env
+      - ./src/private/development.env
     volumes:
-      - --data:/var/lib/postgresql/data
+      - my_notes_app-development-data:/var/lib/postgresql/data
     ports:
-      - ":"
+      - "5432:5432"
     networks:
-      - __network
+      - my_notes_app_development_network
 volumes:
-  --data:
+  my_notes_app-development-data:
   
 networks:
-  __network:
+  my_notes_app_development_network:
     driver: bridge
