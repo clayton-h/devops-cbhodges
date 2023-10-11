@@ -1,0 +1,51 @@
+version: '3'
+services:
+  # Node.js Server
+  notes-development:
+    build:
+      context: .
+      dockerfile: Dockerfile.development
+    container_name: my_app-development
+    env_file:
+      - ./.env.development
+    environment:
+      - NODE_ENV=development
+      - PORT=3010
+    volumes:
+      - .:/app
+    working_dir: /app
+    ports:
+      - "3010:3010"
+    networks:
+      - my_app_development_network
+
+    depends_on:
+      - my_app-development-db
+    command: npm run development
+
+# Firebase local database
+  my_app-development-db:
+    user: "1000:1000"
+    build:
+      context: .
+      dockerfile: Dockerfile.db.development
+    container_name: my_app-development-db
+    env_file:
+      - ./.env.development
+    volumes:
+      - .:/app
+      - my_app-development-data:/var/lib/firebase/data
+    working_dir: /app
+    ports:
+      - "3011:3011"
+      - "3012:3012"
+      - "3013:3013"
+      - "3014:3014"      
+    networks:
+      - my_app_development_network
+volumes:
+  my_app-development-data:
+  
+networks:
+  my_app_development_network:
+    driver: bridge
