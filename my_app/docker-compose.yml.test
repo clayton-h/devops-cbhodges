@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.test
-    container_name: my_notes_app-test
+    container_name: my_app-test
     env_file:
       - ./.env.test
     environment:
@@ -17,24 +17,24 @@ services:
     ports:
       - "3020:3020"
     networks:
-      - my_notes_app_test_network
+      - my_app_test_network
 
     depends_on:
-      - my_notes_app-test-db
+      - my_app-test-db
     command: npm run test
 
 # Firebase local database
-  my_notes_app-test-db:
+  my_app-test-db:
     user: "1000:1000"
     build:
       context: .
       dockerfile: Dockerfile.db.test
-    container_name: my_notes_app-test-db
+    container_name: my_app-test-db
     env_file:
       - ./.env.test
     volumes:
       - .:/app
-      - my_notes_app-test-data:/var/lib/firebase/data
+      - my_app-test-data:/var/lib/firebase/data
     working_dir: /app
     ports:
       - "3021:3021"
@@ -42,10 +42,10 @@ services:
       - "3023:3023"
       - "3024:3024"      
     networks:
-      - my_notes_app_test_network
+      - my_app_test_network
 volumes:
-  my_notes_app-test-data:
+  my_app-test-data:
   
 networks:
-  my_notes_app_test_network:
+  my_app_test_network:
     driver: bridge
