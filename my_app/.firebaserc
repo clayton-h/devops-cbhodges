@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "devops-cf761",
+    "devops": "devops-cf761"
+  },
+  "targets": {},
+  "etags": {}
+}

@@ -1,0 +1,20 @@
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "emulators": {
+        "firestore": {
+    	  "port": 3011,
+	  "host": "0.0.0.0"
+        },
+        "auth": {
+          "port": 3012,
+          "host": "0.0.0.0"
+        },
+	"ui": {
+     	  "enabled": true,
+	  "port": 3014,
+          "host": "0.0.0.0"	 
+        }
+    }
+}

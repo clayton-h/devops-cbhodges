@@ -1,0 +1,40 @@
+version: '3'
+services:
+  # Node.js Server
+  notes--api:
+    build:
+      context: .
+      dockerfile: Dockerfile.
+    container_name: --api
+    env_file:
+      - ./src/private/.env
+    volumes:
+      - .:/app
+    working_dir: /app
+    ports:
+      - ":"
+    networks:
+      - __network
+
+    depends_on:
+      - --db
+    command: npm run 
+
+# PostgreSQL Database
+  --db:
+    image: postgres:15
+    container_name: --db
+    env_file:
+      - ./src/private/.env
+    volumes:
+      - --data:/var/lib/postgresql/data
+    ports:
+      - ":"
+    networks:
+      - __network
+volumes:
+  --data:
+  
+networks:
+  __network:
+    driver: bridge
