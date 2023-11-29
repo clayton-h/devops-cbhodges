@@ -75,3 +75,6 @@ production-launch-fly : secrets-fly
 production-deploy-fly : secrets-fly
 	( cd api && $(FLYCTL) deploy )
 
+.PHONY: npm-deploy
+npm-deploy:
+	sudo npm run build
