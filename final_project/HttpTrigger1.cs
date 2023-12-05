@@ -14,6 +14,12 @@ namespace CoMesa.TestFunction1
 {
     public static class HttpTrigger1
     {
+        private static readonly HttpClient httpClient = new HttpClient();
+
+        // Retrieve the OpenAI API key from the environment variables.
+        private static readonly string openaiApiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY", EnvironmentVariableTarget.Process);
+        private static readonly string openaiApiUrl = "https://api.openai.com/v1/engines/davinci/completions";
+
         [FunctionName("HttpTrigger1")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
@@ -25,13 +31,47 @@ namespace CoMesa.TestFunction1
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            string body = data?.body;
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+            if (string.IsNullOrWhiteSpace(body))
+            {
+                return new BadRequestObjectResult("Please pass the email content in the request body.");
+            }
 
-            return new OkObjectResult(responseMessage);
+            log.LogInformation("Email content sent to ChatGPT.");
+
+            var sentimentResult = await GetSentiment(body, log);
+
+            log.LogInformation("Sentiment returned from ChatGPT.");
+
+            return new OkObjectResult(sentimentResult);
+        }
+        private static async Task<string> GetSentiment(string emailContent, ILogger log)
+        {
+            var sentimentRequestBody = new
+            {
+                prompt = $"Analyze the sentiment of this email: \"{emailContent}\"",
+                max_tokens = 60
+            };
+
+            string sentimentRequestBodyJson = JsonConvert.SerializeObject(sentimentRequestBody);
+            var requestContent = new StringContent(sentimentRequestBodyJson, Encoding.UTF8, "application/json");
+
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", openaiApiKey);
+
+            var response = await httpClient.PostAsync(openaiApiUrl, requestContent);
+            if (!response.IsSuccessStatusCode)
+            {
+                log.LogError($"OpenAI API call failed: {response.StatusCode}");
+                return "Error in analyzing sentiment";
+            }
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            dynamic responseJson = JsonConvert.DeserializeObject(responseContent);
+
+            string sentiment = responseJson.choices[0].text;
+
+            return sentiment.Trim();
         }
     }
 }
