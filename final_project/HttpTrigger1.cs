@@ -50,7 +50,7 @@ namespace CoMesa.TestFunction1
         {
             var sentimentRequestBody = new
             {
-                prompt = $"Provide a single word to describe the sentiment of this email: \"{emailContent}\"",
+                prompt = $"Only respond with an emoji that represents the sentiment of this email: \"{emailContent}\"",
                 max_tokens = 5
             };
 
@@ -70,6 +70,8 @@ namespace CoMesa.TestFunction1
             dynamic responseJson = JsonConvert.DeserializeObject(responseContent);
 
             string sentiment = responseJson.choices[0].text;
+
+            log.LogCritical(sentiment.Trim());
 
             return sentiment.Trim();
         }
