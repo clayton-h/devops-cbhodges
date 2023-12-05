@@ -50,8 +50,8 @@ namespace CoMesa.TestFunction1
         {
             var sentimentRequestBody = new
             {
-                prompt = $"Analyze the sentiment of this email: \"{emailContent}\"",
-                max_tokens = 60
+                prompt = $"Provide a single word to describe the sentiment of this email: \"{emailContent}\"",
+                max_tokens = 5
             };
 
             string sentimentRequestBodyJson = JsonConvert.SerializeObject(sentimentRequestBody);
