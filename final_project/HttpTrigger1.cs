@@ -16,9 +16,8 @@ namespace CoMesa.TestFunction1
     {
         private static readonly HttpClient httpClient = new HttpClient();
 
-        // Retrieve the OpenAI API key from the environment variables.
         private static readonly string openaiApiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY", EnvironmentVariableTarget.Process);
-        private static readonly string openaiApiUrl = "https://api.openai.com/v1/engines/davinci/completions";
+        private static readonly string openaiApiUrl = "https://api.openai.com/v1/engines/text-davinci-003/completions";
 
         [FunctionName("HttpTrigger1")]
         public static async Task<IActionResult> Run(
@@ -27,35 +26,34 @@ namespace CoMesa.TestFunction1
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
-
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             string body = data?.body;
 
             if (string.IsNullOrWhiteSpace(body))
             {
-                return new BadRequestObjectResult("Please pass the email content in the request body.");
+                return new BadRequestObjectResult("Please pass the text content in the request body.");
             }
 
-            log.LogInformation("Email content sent to ChatGPT.");
+            log.LogInformation("Text content sent to OpenAI for analysis.");
 
-            var sentimentResult = await GetSentiment(body, log);
+            var analysisResult = await GetSummary(body, log);
 
-            log.LogInformation("Sentiment returned from ChatGPT.");
+            log.LogInformation("Summary returned from OpenAI.");
 
-            return new OkObjectResult(sentimentResult);
+            return new OkObjectResult(analysisResult);
         }
-        private static async Task<string> GetSentiment(string emailContent, ILogger log)
+
+        private static async Task<string> GetSummary(string textContent, ILogger log)
         {
-            var sentimentRequestBody = new
+            var analysisRequestBody = new
             {
-                prompt = $"Only respond with an emoji that represents the sentiment of this email: \"{emailContent}\"",
-                max_tokens = 5
+                prompt = $"Summarize the following text and provide a list of key insights: \"{textContent}\"",
+                max_tokens = 100
             };
 
-            string sentimentRequestBodyJson = JsonConvert.SerializeObject(sentimentRequestBody);
-            var requestContent = new StringContent(sentimentRequestBodyJson, Encoding.UTF8, "application/json");
+            string analysisRequestBodyJson = JsonConvert.SerializeObject(analysisRequestBody);
+            var requestContent = new StringContent(analysisRequestBodyJson, Encoding.UTF8, "application/json");
 
             httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", openaiApiKey);
 
@@ -63,17 +61,17 @@ namespace CoMesa.TestFunction1
             if (!response.IsSuccessStatusCode)
             {
                 log.LogError($"OpenAI API call failed: {response.StatusCode}");
-                return "Error in analyzing sentiment";
+                return "Error in summarizing text";
             }
 
             string responseContent = await response.Content.ReadAsStringAsync();
             dynamic responseJson = JsonConvert.DeserializeObject(responseContent);
 
-            string sentiment = responseJson.choices[0].text;
+            string summary = responseJson.choices[0].text;
 
-            log.LogCritical(sentiment.Trim());
+            log.LogDebug(summary.Trim());
 
-            return sentiment.Trim();
+            return summary.Trim();
         }
     }
 }
