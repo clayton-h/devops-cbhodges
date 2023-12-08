@@ -48,7 +48,7 @@ namespace CoMesa.TestFunction1
         {
             var analysisRequestBody = new
             {
-                prompt = $"Summarize the following text and provide a list of key insights: \"{textContent}\"",
+                prompt = $"Summarize the following text and provide a JSON response with two fields (one with sentiment of 'positive', 'negative', or 'other' and one with an analysis): \"{textContent}\"",
                 max_tokens = 100
             };
 
@@ -68,8 +68,6 @@ namespace CoMesa.TestFunction1
             dynamic responseJson = JsonConvert.DeserializeObject(responseContent);
 
             string summary = responseJson.choices[0].text;
-
-            log.LogDebug(summary.Trim());
 
             return summary.Trim();
         }
