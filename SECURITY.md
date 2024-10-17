@@ -9,6 +9,6 @@ This repository is publicly accessible for viewing purposes **only**. No duplica
 - **Using** any part of this repository in any software, application, or service (commercial or otherwise) without the owner's consent.
 
 ## Permissions
-For inquiries about licensing, permissions, or usage, please contact [your contact information].
+For inquiries about licensing, permissions, or usage, please contact [claytonhodges326@gmail.com].
 
 Violations of these terms will result in appropriate legal action under applicable copyright and intellectual property laws. **By accessing this repository, you agree to these terms.**
