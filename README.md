@@ -28,7 +28,7 @@ This project is primarily for personal experimentation and learning, focusing on
   
 ## ChatGPT Sentiment Analysis V1.0
 
-Released on **Dec 11, 2023**, this project integrates with ChatGPT to perform sentiment analysis on input text. The Azure Function sends text to OpenAI's ChatGPT model and retrieves sentiment analysis results. The function is tested in the Azure portal environment but has not yet been integrated into a Logic App.
+Released on **Dec 11, 2023**, this project integrates with ChatGPT to perform sentiment analysis on input text. The Azure Function sends text to OpenAI's ChatGPT model and retrieves sentiment analysis results. The function is tested in the Azure portal environment and has been integrated into a Logic App.
 
 ### Example:
 **Input:**
