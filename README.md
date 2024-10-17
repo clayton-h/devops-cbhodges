@@ -25,6 +25,25 @@ This project is primarily for personal experimentation and learning, focusing on
 
 5. **Adding OpenAI API Key and Logging**
    - How to configure your OpenAI API key and implement logging to track requests.
+  
+## ChatGPT Sentiment Analysis V1.0
+
+Released on **Dec 11, 2023**, this project integrates with ChatGPT to perform sentiment analysis on input text. The Azure Function sends text to OpenAI's ChatGPT model and retrieves sentiment analysis results. The function is tested in the Azure portal environment but has not yet been integrated into a Logic App.
+
+### Example:
+**Input:**
+```json
+{
+  "body": "The very best."
+}
+```
+**Output:**
+```
+{
+  "sentiment": "Positive",
+  "analysis": "The speaker is expressing absolute approval."
+}
+```
 
 ## Detailed Instructions
 
@@ -34,7 +53,7 @@ All detailed instructions and code examples for this project are located in the 
 
 ## Project Structure
 
-```bash
+```
 /
 ├── (other coursework)
 ├── azure_sentiment/
@@ -42,4 +61,8 @@ All detailed instructions and code examples for this project are located in the 
 │   ├── function.proj         # Project file for Azure Function
 │   ├── project.assets.json   # Additional project assets
 │   └── run.csx               # Core Azure Function script for sentiment analysis using OpenAI
+├── final_project/
+│   ├── (various configuration files)  # Configuration files
+│   └── readme.md                      # Detailed guide for setting up the project
 └── README.md                 # Overview of the repository
+```
